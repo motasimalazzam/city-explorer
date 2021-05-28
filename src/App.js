@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
-import Weather from './Weather.js'
+import Weather from './components/Weather.js';
+import Movie from './components/Movie.js';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Form from 'react-bootstrap/Form';
@@ -20,6 +21,8 @@ class App extends React.Component {
       longtude: '',
       latitude: '',
       cityWeather: [],
+      movieArr: [],
+      showMovie: false,
       showLocation: false,
       showWeather: false,
       errorMessage: false,
@@ -58,11 +61,11 @@ class App extends React.Component {
 
     try {
       // http://localhost:3001/getWeather?city=amman&lat=31.95&lon=35.91
-      const url = `${serverRoute}/getWeather?city=${this.state.searchQuery}`;
-      console.log('url',url)
+      const weatherUrl = `${serverRoute}/getWeather?city=${this.state.searchQuery}`;
+      console.log('url',weatherUrl)
 
-      let weatherData = await axios.get(url);
-      console.log(weatherData.data);
+      let weatherData = await axios.get(weatherUrl);
+      console.log('weatherData',weatherData.data);
 
       this.setState({
         cityWeather: weatherData.data,
@@ -76,6 +79,28 @@ class App extends React.Component {
         showWeather: false,
       })
     }
+
+    const movieUrl=`${serverRoute}/getMovie?movie=${this.state.searchQuery}`
+    console.log('movieUrl',movieUrl);
+
+    axios
+     .get(movieUrl)
+       .then(movieResult=>{
+         this.setState({
+           movieArr: movieResult.data,
+           showMovie: true,
+         })
+         console.log('MovieData',movieResult.data);
+       })
+       
+      .catch(error=>{
+        this.setState({
+          showMovie:false,
+          movieArr: `No Movie for this City ${error}`,
+        })
+      })
+
+    
   }
 
   updateSearchQuery = (event) => {
@@ -126,6 +151,11 @@ class App extends React.Component {
 
         {this.state.showLocation &&
           <Weather weatherDataFromApp={this.state.cityWeather} showWeather={this.state.showWeather}></Weather>
+        }
+
+        {this.state.showLocation &&
+        
+        <Movie movieFromApp={this.state.movieArr} showMovie={this.state.showMovie}/>
         }
 
       </div>
