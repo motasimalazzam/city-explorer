@@ -6,25 +6,17 @@ class Weather extends React.Component {
         
     render() {
         return (
-            <div>
+            <div key={this.props.idx} style={{display:'inline-block'}} >
 
                 {this.props.showWeather &&
 
                     <ListGroup>
 
                         <ListGroup.Item action variant="success">
-                            {this.props.weatherDataFromApp[0].date} <br></br>
-                            {this.props.weatherDataFromApp[0].discription}
+                            {this.props.weather.date} <br></br>
+                            {this.props.weather.discription}
                         </ListGroup.Item>
-                        <ListGroup.Item action variant="danger">
-                            {this.props.weatherDataFromApp[1].date} <br></br>
-                            {this.props.weatherDataFromApp[1].discription}
-                        </ListGroup.Item>
-                        <ListGroup.Item action variant="warning">
-                            {this.props.weatherDataFromApp[2].date} <br></br>
-                            {this.props.weatherDataFromApp[2].discription}
-                        </ListGroup.Item>
-
+                
                     </ListGroup>
                 }
             </div>

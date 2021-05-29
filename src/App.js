@@ -26,7 +26,7 @@ class App extends React.Component {
       showLocation: false,
       showWeather: false,
       errorMessage: false,
-      errorCode:'',
+      errorCode: '',
     }
   }
 
@@ -50,7 +50,7 @@ class App extends React.Component {
         longtude: result.data[0].lon,
         latitude: result.data[0].lat,
       })
-    }catch (error){
+    } catch (error) {
 
       this.setState({
         showLocation: false,
@@ -62,17 +62,17 @@ class App extends React.Component {
     try {
       // http://localhost:3001/getWeather?city=amman&lat=31.95&lon=35.91
       const weatherUrl = `${serverRoute}/getWeather?city=${this.state.searchQuery}`;
-      console.log('url',weatherUrl)
+      console.log('url', weatherUrl)
 
       let weatherData = await axios.get(weatherUrl);
-      console.log('weatherData',weatherData.data);
+      console.log('weatherData', weatherData.data);
 
       this.setState({
         cityWeather: weatherData.data,
         showWeather: true,
       })
 
-    }catch (error){
+    } catch (error) {
 
       this.setState({
         cityWeather: error.respose,
@@ -80,27 +80,27 @@ class App extends React.Component {
       })
     }
 
-    const movieUrl=`${serverRoute}/getMovie?movie=${this.state.searchQuery}`
-    console.log('movieUrl',movieUrl);
+    const movieUrl = `${serverRoute}/getMovie?movie=${this.state.searchQuery}`
+    console.log('movieUrl', movieUrl);
 
     axios
-     .get(movieUrl)
-       .then(movieResult=>{
-         this.setState({
-           movieArr: movieResult.data,
-           showMovie: true,
-         })
-         console.log('MovieData',movieResult.data);
-       })
-       
-      .catch(error=>{
+      .get(movieUrl)
+      .then(movieResult => {
         this.setState({
-          showMovie:false,
+          movieArr: movieResult.data,
+          showMovie: true,
+        })
+        console.log('MovieData', movieResult.data);
+      })
+
+      .catch(error => {
+        this.setState({
+          showMovie: false,
           movieArr: `No Movie for this City ${error}`,
         })
       })
 
-    
+
   }
 
   updateSearchQuery = (event) => {
@@ -141,6 +141,7 @@ class App extends React.Component {
           </Card>
         }
 
+
         {this.state.errorMessage &&
 
           <Alert variant="danger">
@@ -150,12 +151,32 @@ class App extends React.Component {
         }
 
         {this.state.showLocation &&
-          <Weather weatherDataFromApp={this.state.cityWeather} showWeather={this.state.showWeather}></Weather>
+
+          <h2>Weather for 16 Days</h2>}
+
+        {this.state.showLocation && this.state.cityWeather.map((weather, idx) => (
+
+          <Weather showWeather={this.state.showWeather}
+            key={idx}
+            weather={weather}
+          />
+        ))
+          // <Weather weatherDataFromApp={this.state.cityWeather} showWeather={this.state.showWeather}/>
+
         }
 
         {this.state.showLocation &&
-        
-        <Movie movieFromApp={this.state.movieArr} showMovie={this.state.showMovie}/>
+          <h2>List of movies </h2>}
+
+        {this.state.showLocation && this.state.movieArr.map((movie, idx) => (
+
+            <Movie showMovie={this.state.showMovie}
+              key={idx}
+              movie={movie}
+            />
+            // <Movie movieFromApp={this.state.movieArr} showMovie={this.state.showMovie}/>
+          ))
+
         }
 
       </div>
